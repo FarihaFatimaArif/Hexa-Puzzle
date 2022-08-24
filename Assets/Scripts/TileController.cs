@@ -11,15 +11,17 @@ public class TileController : MonoBehaviour, IInputSystem
     //Vector3 pos;
     float startTime;
     float distance;
-    [SerializeField] Camera MianCam; 
-    [SerializeField] GameObject TileObj;
+    Camera MianCam; 
+   // [SerializeField] GameObject TileObj;
     Tile tileRef;
     public void Start()
     {
         //tileRef.Position = new Vector3();
-        tileRef = TileObj.GetComponent<Tile>(); //
+        MianCam = Camera.main;
+        Debug.Log(MianCam);
+        tileRef = this.GetComponent<Tile>(); //
         tileRef.State = false;
-        tileRef.Position = TileObj.transform.position; //
+        tileRef.Position = this.transform.position; //
     }
     public void InitializeIGrid(IGrid grid)
     {
@@ -38,7 +40,7 @@ public class TileController : MonoBehaviour, IInputSystem
             Debug.Log("rotate 1");
             if (hit.collider.tag == "New Tile")
             {
-                TileObj.transform.Rotate(0, 0, 90); //
+                this.transform.Rotate(0, 0, 90); //
             }
         }
     }
@@ -85,7 +87,7 @@ public class TileController : MonoBehaviour, IInputSystem
             pos = MianCam.ScreenToWorldPoint(pos);
             pos.z = 0;
             distance = Vector3.Distance(pos, tileRef.Position);
-            TileObj.transform.position = Vector3.Lerp(pos, tileRef.Position, Time.deltaTime * 2 + distance); //
+            this.transform.position = Vector3.Lerp(pos, tileRef.Position, Time.deltaTime * 2 + distance); //
         }
 
     }
@@ -99,7 +101,7 @@ public class TileController : MonoBehaviour, IInputSystem
         Vector3? newpos= (Vector3?)iGrid.GetNearestPositionFromPoint(this.transform.position);
         if (newpos != null)
         {
-            TileObj.transform.position = (Vector3)newpos; //
+            this.transform.position = (Vector3)newpos; //
             tileRef.State = true;
         }
         else

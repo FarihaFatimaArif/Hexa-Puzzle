@@ -11,10 +11,8 @@ public class InputController : MonoBehaviour, IInputState
     Vector2 touchEndPos;
     public void InitializeInputController(IInputSystem ic)
     {
-        Debug.Log("intialized");
         InputSystem = ic;
         ChangeState(new IdleInputState(this, InputSystem));
-        Debug.Log(state);
     }
     public void ChangeState(InputState _state)
     {
@@ -28,6 +26,8 @@ public class InputController : MonoBehaviour, IInputState
             if (touch.phase == TouchPhase.Began)
             {
                 touchStartPos = touch.position;
+                Debug.Log(touch);
+                Debug.Log(state);
                 state.Begin(touch);
             }
             else if (touch.phase == TouchPhase.Moved)
