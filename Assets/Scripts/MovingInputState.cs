@@ -14,10 +14,17 @@ public class MovingInputState : InputState
     {
         //Drag Move
         //DragMove.Invoke(touch);
+        // Debug.LogError($"");
+        InputSystem.MovingTile(touch);
     }
     public override void End(Touch touch)
     {
         //Drag End
         //DragMove.Invoke(touch);
+        InputSystem.SnapOnGrid(touch);
+       // InputSystem.ReturnToPosition(touch);
+        //InputSystem.SnapOnGrid(touch);
+        Listner.ChangeState(new IdleInputState(this.Listner, this.InputSystem));
+
     }
 }

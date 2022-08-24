@@ -4,7 +4,9 @@ using UnityEngine;
 
 public interface IInputSystem 
 {
-    public void TapRotate();
-    public void DragSnap();
-    public void DragReturn();
+    public void TapRotate(Touch touch);
+    public void ReturnToPosition(Touch touch);
+    public void SnapOnGrid(Touch touch);
+    public bool DetectRay(Touch touch);
+    public void MovingTile(Touch touch);
 }

@@ -13,6 +13,8 @@ public class CallibrationInputState : InputState
     {
         //Listener.TapDetected
         //Tap.Invoke(touch);
+        //if(InputS)
+        InputSystem.TapRotate(touch);
         Listner.ChangeState(new IdleInputState(this.Listner, this.InputSystem));
     }
 

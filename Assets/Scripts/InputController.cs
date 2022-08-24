@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour, IInputState
 {
-    IInputSystem inputsystem;
+    protected IInputSystem InputSystem;
     InputState state;
     Touch touch;
     Vector2 touchStartPos;
     Vector2 touchEndPos;
-    void OnEnable()
+    public void InitializeInputController(IInputSystem ic)
     {
-        ChangeState(new IdleInputState(this, inputsystem));
+        Debug.Log("intialized");
+        InputSystem = ic;
+        ChangeState(new IdleInputState(this, InputSystem));
+        Debug.Log(state);
     }
     public void ChangeState(InputState _state)
     {
@@ -27,11 +30,10 @@ public class InputController : MonoBehaviour, IInputState
                 touchStartPos = touch.position;
                 state.Begin(touch);
             }
-            else if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Ended)
+            else if (touch.phase == TouchPhase.Moved)
             {
                 touchEndPos = touch.position;
                 state.Move(touch);
-
 
             }
             else if (touch.phase == TouchPhase.Ended)

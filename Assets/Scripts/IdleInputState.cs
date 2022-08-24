@@ -9,6 +9,10 @@ public class IdleInputState : InputState
     }
     override public void Begin(Touch touch)
     {
-        Listner.ChangeState(new CallibrationInputState(this.Listner, this.InputSystem));
+        if (InputSystem.DetectRay(touch))
+        {
+
+            Listner.ChangeState(new CallibrationInputState(this.Listner, this.InputSystem));
+        }
     }
 }

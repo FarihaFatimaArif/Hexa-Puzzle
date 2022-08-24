@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    GameObject hex;
-    int tier;
-    bool state; //snapped or not
+    //GameObject hex;
+    [SerializeField] int tier;
+    bool state;
+    Vector3 position;
+    //snapped or not
     // Start is called before the first frame update
     void Start()
     {
-        
+       // position=
     }
 
     // Update is called once per frame
@@ -18,4 +20,14 @@ public class Tile : MonoBehaviour
     {
         
     }
+    public bool State
+    {
+        get { return state; }
+        set { state = value; }
+    }
+     public Vector3 Position
+    {
+        get { return this.position; }
+        set { this.position = value; }
+    } 
 }
