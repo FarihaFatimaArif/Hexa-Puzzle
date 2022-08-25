@@ -12,16 +12,14 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("start");
        // newTileRef = GameObject.FindGameObjectWithTag("New Tile");
         TileControllerRef = this.GetComponent<TileController>();
         InputControllerRef = this.GetComponent<InputController>();
         tileSpawner = this.GetComponent<TileSpawner>();
         tileSpawner.Spawn();
         InputControllerRef.InitializeInputController(TileControllerRef);
-        Debug.Log("gm");
-        Debug.Log(TileControllerRef);
-        TileControllerRef.Initialization(HexaGrifRef);
+        TileControllerRef.InitializatingGrid(HexaGrifRef);
+        TileControllerRef.InitializingTiles();
     }
 
     // Update is called once per frame

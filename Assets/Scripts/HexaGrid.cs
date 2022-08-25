@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HexaGrid : MonoBehaviour, IGrid
@@ -78,13 +79,11 @@ public class HexaGrid : MonoBehaviour, IGrid
         return null;
     }
 
-    // Update is called once per frame
-    void Update()
+    public GameObject FindTile(Vector3 pos)
     {
-        //Vector2? snapPosition = GetNearestPositionFromPoint(Vector2.zero);
-        //if (snapPosition.HasValue)
-        //{
-        //    Vector2 snap = snapPosition.Value;
-        //}
+        Debug.Log("in findtile");
+        Debug.Log(pos);
+        GameObject tile = tiles[pos];
+        return tile;
     }
 }

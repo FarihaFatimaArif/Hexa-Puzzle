@@ -1,23 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TileController : MonoBehaviour, IInputSystem
 {
     //Touch touch;
+    public UnityEvent SpawnTile;
     IGrid iGrid;
     [SerializeField] float Speed = 1;
     //static Vector3 TilestartPos;
     //Vector3 pos;
     float startTime;
     float distance;
-    Camera MianCam; 
+    Camera MianCam;
+    Vector3 initialPos;
     GameObject tileParentObj;
     GameObject tileObj;
     GameObject tileObj2;
     Tile tileRef;
     public void Start()
     {
+        initialPos = new Vector3(2, -4, 0);
         tileParentObj = GameObject.FindGameObjectWithTag("Parent Tile");
         //tileRef.Position = new Vector3();
         MianCam = Camera.main;
@@ -27,11 +31,14 @@ public class TileController : MonoBehaviour, IInputSystem
         tileRef.State = false;
         tileRef.Position = tileObj.transform.position; */
     }
-    public void Initialization(IGrid grid)
+    public void InitializatingGrid(IGrid grid)
     {
         iGrid = grid;
+    }
+    public void InitializingTiles()
+    {
         tileObj = tileParentObj.transform.GetChild(0).gameObject;
-        if(tileParentObj.transform.childCount>1)
+        if (tileParentObj.transform.childCount > 1)
         {
             tileObj2 = tileParentObj.transform.GetChild(1).gameObject;
         }
@@ -112,8 +119,10 @@ public class TileController : MonoBehaviour, IInputSystem
     { 
         Vector3 pos = touch.position;
         Vector3 deltaPos=Vector3.zero;
+        bool dual = false;
        if(tileParentObj.transform.childCount>1)
         {
+            dual = true;
             tileObj2 = tileParentObj.transform.GetChild(1).gameObject;
             deltaPos = tileObj2.transform.position - tileObj.transform.position;
   
@@ -123,11 +132,48 @@ public class TileController : MonoBehaviour, IInputSystem
         Vector3? newpos = (Vector3?)iGrid.GetNearestPositionFromPoint(tileObj.transform.position, deltaPos);
         if (newpos != null)
         {
-            tileObj.transform.position = (Vector3)newpos;
-            tileRef.State = true;
-            if(tileParentObj.transform.childCount > 1)
+            GameObject NewParent = iGrid.FindTile((Vector3)newpos);
+            if (NewParent.transform.childCount == 0 && dual==false)
             {
-                tileObj2.transform.position = (Vector3)newpos+deltaPos;
+                tileObj.transform.position = (Vector3)newpos;
+                tileRef.State = true;
+                /* if (tileParentObj.transform.childCount > 1)
+                {
+                    tileObj2.transform.position = (Vector3)newpos + deltaPos;
+                    GameObject NewParent2 = iGrid.FindTile((Vector3)newpos + deltaPos);
+                    tileObj2.transform.SetParent(NewParent2.transform);
+                    tileObj2.tag = "Untagged";
+                } */
+                tileObj.transform.SetParent(NewParent.transform);
+                tileObj.tag = "Untagged";
+                tileParentObj.transform.position = initialPos;
+                SpawnTile.Invoke();
+            }
+            else if(dual==true)
+            {
+                GameObject NewParent2 = iGrid.FindTile((Vector3)newpos + deltaPos);
+                if (NewParent.transform.childCount == 0 && NewParent2.transform.childCount == 0)
+                {
+                    tileObj.transform.position = (Vector3)newpos;
+                    tileRef.State = true;
+                    tileObj2.transform.position = (Vector3)newpos + deltaPos;
+                    tileObj2.transform.SetParent(NewParent2.transform);
+                    tileObj2.tag = "Untagged";
+                    tileObj.transform.SetParent(NewParent.transform);
+                    tileObj.tag = "Untagged";
+                    tileParentObj.transform.position = initialPos;
+                    SpawnTile.Invoke();
+                }
+                else
+                {
+                    tileRef.State = false;
+                    ReturnToPosition(touch);
+                }
+            }
+            else
+            {
+                tileRef.State = false;
+                ReturnToPosition(touch);
             }
         }
         else

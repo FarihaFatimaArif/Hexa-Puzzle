@@ -152,6 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e65ecfd0c77e43c8a7a499bbf911bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SpawnTile:
+    m_PersistentCalls:
+      m_Calls: []
   Speed: 1
 --- !u!61 &480037234
 BoxCollider2D:
@@ -542,6 +545,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e65ecfd0c77e43c8a7a499bbf911bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SpawnTile:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1840656267}
+        m_TargetAssemblyTypeName: TileSpawner, Assembly-CSharp
+        m_MethodName: Spawn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1840656268}
+        m_TargetAssemblyTypeName: TileController, Assembly-CSharp
+        m_MethodName: InitializingTiles
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   Speed: 1
 --- !u!1001 &1984547603
 PrefabInstance:
