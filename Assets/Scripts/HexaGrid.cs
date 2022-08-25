@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -55,14 +56,22 @@ public class HexaGrid : MonoBehaviour, IGrid
         }
     }
 
-    public Vector3? GetNearestPositionFromPoint(Vector3 position)
+    public Vector3? GetNearestPositionFromPoint(Vector3 position, Vector3 delta)
     {
-        foreach(var pair in tiles)
+        float distance;
+        foreach (var pair in tiles)
         {
-            float distance = Vector3.Distance(pair.Key, position);
+             distance = Vector3.Distance(pair.Key, position);
             if (distance < 0.5f)
             {
-                return pair.Key;
+                foreach (var pair2 in tiles)
+                {
+                    distance = Vector3.Distance(pair2.Key, position+delta);
+                    if (distance < 0.5f)
+                    {
+                        return pair.Key;
+                    }
+                }
             }
         }
 

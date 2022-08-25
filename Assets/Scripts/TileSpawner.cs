@@ -5,34 +5,42 @@ using UnityEngine;
 public class TileSpawner : MonoBehaviour
 {
     int decider;
-    int tile1;
-    int tile2;
+    int tileT1;
+    int tileT2;
+    GameObject tile1;
+    GameObject tile2;
+   // GameObject parent;
     [SerializeField] List<GameObject> TilePrefabs;
     [SerializeField] GameObject NewTileParent;
     // Start is called before the first frame update
-    void Start()
+    public void Spawn()
     {
         decider = Random.Range(1, 10);
         if(decider<5)
         {
-            tile1= Random.Range(1, 5);
-            tile2= Random.Range(1, 5);
-            // TilePrefabs[tile1 - 1].tag = "New Tile2";
-            Instantiate(NewTileParent, NewTileParent.transform.position, Quaternion.identity);
-            Instantiate(TilePrefabs[tile1-1], TilePrefabs[tile1 - 1].transform.position, Quaternion.identity);
-            Vector3 temppos=TilePrefabs[tile2 - 1].transform.position;
-            temppos.x= temppos.x + 0.87f;
-            TilePrefabs[tile2 - 1].transform.position = temppos;
-            Instantiate(TilePrefabs[tile2-1], TilePrefabs[tile2 - 1].transform.position, Quaternion.identity);
-            NewTileParent.tag = "New Tile";
-            TilePrefabs[tile1 - 1].transform.SetParent(NewTileParent.transform);
-            TilePrefabs[tile2 - 1].transform.SetParent(NewTileParent.transform);
+            tileT1= Random.Range(1, 5);
+            tileT2= Random.Range(1, 5);
+            //tileT1.tag = "New Tile2";
+           // parent=Instantiate(NewTileParent, NewTileParent.transform.position, Quaternion.identity);
+            tile1=Instantiate(TilePrefabs[tileT1-1], TilePrefabs[tileT1 - 1].transform.position, Quaternion.identity);
+            Vector3 temppos=TilePrefabs[tileT2 - 1].transform.position;
+            temppos.x= temppos.x + 1;
+            //TilePrefabs[tileT2 - 1].transform.position = temppos;
+            tile2=Instantiate(TilePrefabs[tileT2-1], temppos, Quaternion.identity);
+            //NewTileParent.tag = "New Tile";
+            tile1.transform.SetParent(NewTileParent.transform);
+            tile1.tag = "New Tile";
+            tile2.transform.SetParent(NewTileParent.transform);
+            tile2.tag = "New Tile";
         }
         else 
         {
-            tile1 = Random.Range(1, 5);
-            TilePrefabs[tile1 - 1].tag = "New Tile";
-            Instantiate(TilePrefabs[tile1 - 1], TilePrefabs[tile1 - 1].transform.position, Quaternion.identity);
+            tileT1 = Random.Range(1, 5);
+            // NewTileParent = Instantiate(NewTileParent, NewTileParent.transform.position, Quaternion.identity);
+            tile1 =Instantiate(TilePrefabs[tileT1 - 1], TilePrefabs[tileT1 - 1].transform.position, Quaternion.identity);
+            //NewTileParent.tag = "New Tile";
+            tile1.tag = "New Tile";
+            tile1.transform.SetParent(NewTileParent.transform);
         }
     }
 
