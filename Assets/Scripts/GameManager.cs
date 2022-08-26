@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     {
        // newTileRef = GameObject.FindGameObjectWithTag("New Tile");
         TileControllerRef = this.GetComponent<TileController>();
+        Debug.Log(TileControllerRef);
         InputControllerRef = this.GetComponent<InputController>();
         tileSpawner = this.GetComponent<TileSpawner>();
         tileSpawner.Spawn();

@@ -1,16 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class TileController : MonoBehaviour, IInputSystem
 {
-    //Touch touch;
     public UnityEvent SpawnTile;
     IGrid iGrid;
-    [SerializeField] float Speed = 1;
-    //static Vector3 TilestartPos;
-    //Vector3 pos;
     float startTime;
     float distance;
     Camera MianCam;
@@ -22,14 +16,7 @@ public class TileController : MonoBehaviour, IInputSystem
     public void Start()
     {
         initialPos = new Vector3(2, -4, 0);
-        tileParentObj = GameObject.FindGameObjectWithTag("Parent Tile");
-        //tileRef.Position = new Vector3();
         MianCam = Camera.main;
-        //Debug.Log(MianCam);
-       // Debug.Log(tileObj);
-       /* tileRef = tileObj.transform.GetChild(0).GetComponent<Tile>(); //
-        tileRef.State = false;
-        tileRef.Position = tileObj.transform.position; */
     }
     public void InitializatingGrid(IGrid grid)
     {
@@ -37,6 +24,7 @@ public class TileController : MonoBehaviour, IInputSystem
     }
     public void InitializingTiles()
     {
+        tileParentObj = GameObject.FindGameObjectWithTag("Parent Tile");
         tileObj = tileParentObj.transform.GetChild(0).gameObject;
         if (tileParentObj.transform.childCount > 1)
         {
@@ -52,10 +40,8 @@ public class TileController : MonoBehaviour, IInputSystem
         {
             Vector3 pos = touch.position;
             pos = MianCam.ScreenToWorldPoint(pos);
-            //Vector2 ray = MianCam.ScreenPointToRay(pos);
             RaycastHit2D hit;
             hit = Physics2D.Raycast(pos, MianCam.transform.forward, Mathf.Infinity);
-            //Debug.LogError(hit.collider);
             if (hit.collider)
             {
                 if (hit.collider.tag == "New Tile")
@@ -77,11 +63,7 @@ public class TileController : MonoBehaviour, IInputSystem
         Vector3 startPos = this.transform.position;
         distance = Vector3.Distance(startPos, pos);
         RaycastHit2D hit;
-
-        // float t = Mathf.MoveTowards(startPos, pos, Speed * Time.deltaTime);
-
         hit = Physics2D.Raycast(pos, MianCam.transform.forward, Mathf.Infinity);
-        //Debug.LogError(hit.collider);
         if (hit.collider)
         { 
             if (hit.collider.tag == "New Tile")
@@ -101,7 +83,12 @@ public class TileController : MonoBehaviour, IInputSystem
         Vector3 startPos = tileParentObj.transform.position;//
         distance = Vector3.Distance(startPos, pos);
         tileParentObj.transform.position = Vector3.Lerp(startPos, pos, Time.deltaTime * 2 + distance);//
+        highlighttiles();
     }
+    void highlighttiles()
+    {
+        
+    }    
     public void ReturnToPosition(Touch touch)
     {
         if (!tileRef.State)
@@ -125,7 +112,14 @@ public class TileController : MonoBehaviour, IInputSystem
             dual = true;
             tileObj2 = tileParentObj.transform.GetChild(1).gameObject;
             deltaPos = tileObj2.transform.position - tileObj.transform.position;
-  
+           /* Debug.Log(deltaPos);
+            Debug.Log("deltaPos");
+            Debug.Log(tileObj.transform.position);
+            Debug.Log("tileObj.transform.position");
+            Debug.Log(tileObj2.transform.position);
+            Debug.Log("tileObj.transform.position"); */
+            //Debug.Log(deltaPos);
+
         }
         pos = MianCam.ScreenToWorldPoint(pos);
         pos.z = 0;

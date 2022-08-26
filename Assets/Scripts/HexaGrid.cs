@@ -7,14 +7,13 @@ using UnityEngine;
 public class HexaGrid : MonoBehaviour, IGrid
 {
     [SerializeField] GameObject Tile;
-    int width = 5;
-    int height = 5;
+    [SerializeField] int Width = 5;
+    [SerializeField] int Height = 5;
     float xOffset = 1f;
     float yOffset = 0.86f;
     float xPos;
     float yPos;
-    Vector3 pos;
-
+    bool once = false;
     GameObject tileGenerated;
 
     public Dictionary<Vector3, GameObject> tiles = new Dictionary<Vector3, GameObject>();
@@ -22,35 +21,44 @@ public class HexaGrid : MonoBehaviour, IGrid
     // Start is called before the first frame update
     void Start()
     {
+        Vector3 tilePosition;
+
         tiles.Clear();
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 if (y % 2 == 0)
                 {
                     xPos = x * xOffset;
                     yPos = y * yOffset;
-                    pos.x = xPos;
-                    pos.y = yPos;
-                    pos.z = 0;
-                    tileGenerated = (GameObject)Instantiate(Tile, pos, Quaternion.identity);
+                    tilePosition.x = xPos;
+                    tilePosition.y = yPos;
+                    tilePosition.z = 0;
+                    if (!once)
+                    {
+                        tileGenerated = (GameObject)Instantiate(Tile, tilePosition, Quaternion.identity);
+                    }
+                    else
+                    {
+                        tileGenerated = (GameObject)Instantiate(tileGenerated, tilePosition, Quaternion.identity);
+                    }
                     tileGenerated.name = "Hex_" + x + "_" + y;
                     tileGenerated.transform.SetParent(this.transform);
-                    tiles.Add(pos, tileGenerated);
+                    tiles.Add(tilePosition, tileGenerated);
                 }
-                else if (x<width-1)
+                else if (x<Width-1)
                 {
                     xPos = x * xOffset;
                     xPos += xOffset / 2f;
                     yPos = y * yOffset;
-                    pos.x = xPos;
-                    pos.y = yPos;
-                    pos.z = 0;
-                    tileGenerated = (GameObject)Instantiate(Tile, pos, Quaternion.identity);
+                    tilePosition.x = xPos;
+                    tilePosition.y = yPos;
+                    tilePosition.z = 0;
+                    tileGenerated = (GameObject)Instantiate(Tile, tilePosition, Quaternion.identity);
                     tileGenerated.name = "Hex_" + x + "_" + y;
                     tileGenerated.transform.SetParent(this.transform);
-                    tiles.Add(pos, tileGenerated);
+                    tiles.Add(tilePosition, tileGenerated);
                 }
 
             }
