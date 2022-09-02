@@ -9,4 +9,5 @@ public interface IInputSystem
     public void SnapOnGrid(Touch touch);
     public bool DetectRay(Touch touch);
     public void MovingTile(Touch touch);
+    void Highlighttiles(Touch touch);
 }

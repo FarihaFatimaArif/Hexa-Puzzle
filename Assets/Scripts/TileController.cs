@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,11 +9,11 @@ public class TileController : MonoBehaviour, IInputSystem
     float startTime;
     float distance;
     Camera MianCam;
-    Vector3 initialPos;
-    GameObject tileParentObj;
-    GameObject tileObj;
-    GameObject tileObj2;
-    Tile tileRef;
+    [SerializeField] Vector3 initialPos;
+    int noOfTiles;
+    List<Tile> tilesList = new List<Tile>();
+    List<HexData> tempHex2 = new List<HexData>();
+    [SerializeField] GameObject TileParentObj;
     public void Start()
     {
         initialPos = new Vector3(2, -4, 0);
@@ -24,19 +25,23 @@ public class TileController : MonoBehaviour, IInputSystem
     }
     public void InitializingTiles()
     {
-        tileParentObj = GameObject.FindGameObjectWithTag("Parent Tile");
-        tileObj = tileParentObj.transform.GetChild(0).gameObject;
-        if (tileParentObj.transform.childCount > 1)
+        string tempstr;
+        tempHex2.Clear();
+        tilesList.Clear();
+        noOfTiles = TileParentObj.transform.childCount;
+        for (int i = 0; i < noOfTiles; i++)
         {
-            tileObj2 = tileParentObj.transform.GetChild(1).gameObject;
+            Tile temp = new Tile();
+            temp.TileObj = TileParentObj.transform.GetChild(i).gameObject;
+            temp.State = false;
+            tempstr = temp.TileObj.name.ToString();
+            temp.Tier = int.Parse(tempstr[0].ToString());
+            tilesList.Add(temp);
         }
-        tileRef = tileObj.GetComponent<Tile>(); //
-        tileRef.State = false;
-        tileRef.Position = tileParentObj.transform.position;
     }
     public void TapRotate(Touch touch)
     {
-        if (tileParentObj.transform.childCount > 0 && tileRef.State==false)
+        if (noOfTiles > 0 && tilesList[0].State==false)
         {
             Vector3 pos = touch.position;
             pos = MianCam.ScreenToWorldPoint(pos);
@@ -46,9 +51,13 @@ public class TileController : MonoBehaviour, IInputSystem
             {
                 if (hit.collider.tag == "New Tile")
                 {
-                    tileParentObj.transform.Rotate(0, 0, 60); //
-                    tileParentObj.transform.GetChild(0).transform.Rotate(0, 0, -60);
-                    tileParentObj.transform.GetChild(1).transform.Rotate(0, 0, -60);
+                    TileParentObj.transform.Rotate(0, 0, 60);
+                    for (int i=0;i<noOfTiles;i++)
+                    {
+                        tilesList[i].TileObj.transform.Rotate(0, 0, -60);
+                       
+                    }
+ 
                 }
             }
         }
@@ -80,100 +89,120 @@ public class TileController : MonoBehaviour, IInputSystem
         pos = MianCam.ScreenToWorldPoint(pos);
         pos.z = 0;
         pos.y = pos.y +offset;
-        Vector3 startPos = tileParentObj.transform.position;//
+        Vector3 startPos = TileParentObj.transform.position;//
         distance = Vector3.Distance(startPos, pos);
-        tileParentObj.transform.position = Vector3.Lerp(startPos, pos, Time.deltaTime * 2 + distance);//
-        highlighttiles();
+        TileParentObj.transform.position = Vector3.Lerp(startPos, pos, Time.deltaTime * 2 + distance);
     }
-    void highlighttiles()
+    public void Highlighttiles(Touch touch)
     {
-        
-    }    
+        //bool highlighted = false;
+       List<HexData> tempHex = new List<HexData>();
+    //   List<HexData> tempHex2 = new List<HexData>();
+        bool highlight = true;
+        Vector3 deltaPos = Vector3.zero;
+        for (int i = 0; i < noOfTiles; i++)
+        {
+            tempHex.Add(iGrid.GetNearestPositionFromPoint(tilesList[i].TileObj.transform.position + deltaPos));
+            if (tempHex[i] == null)
+            {
+                highlight = false;
+                i = noOfTiles;
+            }
+            else if (i >= 1)
+            {
+                deltaPos = tempHex[i].Hex.transform.position - tempHex[i - 1].Hex.transform.position;
+            }
+        }
+        if (highlight)
+        {
+            tempHex2.Clear();
+            for (int i = 0; i < noOfTiles; i++)
+            {
+                tempHex[i].Hex.GetComponent<SpriteRenderer>().color = Color.gray;
+                tempHex2.Add(tempHex[i]);
+            }
+       
+        }
+        if (tempHex2.Count != 0 && tempHex.Count != 0)
+            {
+                if(tempHex2[0].Id!=tempHex[0].Id)
+                {
+                    for (int i = 0; i < tempHex2.Count; i++)
+                    {
+                        tempHex2[i].Hex.GetComponent<SpriteRenderer>().color = Color.white;
+                    }
+                tempHex2.Clear();
+                }
+            }
+        //iGrid.ResetColor(tempTiles);
+    }
     public void ReturnToPosition(Touch touch)
     {
-        if (!tileRef.State)
+        if (!tilesList[0].State)
         { 
             Vector3 pos = touch.position;
             pos = MianCam.ScreenToWorldPoint(pos);
             pos.z = 0;
-            distance = Vector3.Distance(pos, tileRef.Position);
-            tileParentObj.transform.position = Vector3.Lerp(pos, tileRef.Position, Time.deltaTime * 2 + distance); //
+            distance = Vector3.Distance(pos, initialPos);
+            TileParentObj.transform.position = Vector3.Lerp(pos, initialPos, Time.deltaTime * 2 + distance); //
         }
 
     }
-
     public void SnapOnGrid(Touch touch)
-    { 
-        Vector3 pos = touch.position;
-        Vector3 deltaPos=Vector3.zero;
-        bool dual = false;
-       if(tileParentObj.transform.childCount>1)
-        {
-            dual = true;
-            tileObj2 = tileParentObj.transform.GetChild(1).gameObject;
-            deltaPos = tileObj2.transform.position - tileObj.transform.position;
-           /* Debug.Log(deltaPos);
-            Debug.Log("deltaPos");
-            Debug.Log(tileObj.transform.position);
-            Debug.Log("tileObj.transform.position");
-            Debug.Log(tileObj2.transform.position);
-            Debug.Log("tileObj.transform.position"); */
-            //Debug.Log(deltaPos);
-
+    {
+        List<HexData> parentHex = new List<HexData>();
+        HexData temp;
+        bool snap = true;
+        Vector3 touchPos = touch.position;
+        touchPos = MianCam.ScreenToWorldPoint(touchPos);
+        touchPos.z = 0;
+        Vector3 deltaPos = Vector3.zero;
+        for (int i = 0; i < noOfTiles; i++)
+        { 
+            temp=iGrid.GetNearestPositionFromPoint(tilesList[i].TileObj.transform.position + deltaPos);
+            if (temp != null)
+            {
+                parentHex.Add(temp);
+            }
+            else if(temp==null)
+            {
+                snap = false;
+                i = noOfTiles;
+            }
+            else if (i >= 1)
+            {
+                deltaPos = parentHex[i].Hex.transform.position - parentHex[i - 1].Hex.transform.position;
+            }
         }
-        pos = MianCam.ScreenToWorldPoint(pos);
-        pos.z = 0;
-        Vector3? newpos = (Vector3?)iGrid.GetNearestPositionFromPoint(tileObj.transform.position, deltaPos);
-        if (newpos != null)
+        if (snap)
         {
-            GameObject NewParent = iGrid.FindTile((Vector3)newpos);
-            if (NewParent.transform.childCount == 0 && dual==false)
+            for (int i = 0; i < noOfTiles; i++)
             {
-                tileObj.transform.position = (Vector3)newpos;
-                tileRef.State = true;
-                /* if (tileParentObj.transform.childCount > 1)
-                {
-                    tileObj2.transform.position = (Vector3)newpos + deltaPos;
-                    GameObject NewParent2 = iGrid.FindTile((Vector3)newpos + deltaPos);
-                    tileObj2.transform.SetParent(NewParent2.transform);
-                    tileObj2.tag = "Untagged";
-                } */
-                tileObj.transform.SetParent(NewParent.transform);
-                tileObj.tag = "Untagged";
-                tileParentObj.transform.position = initialPos;
-                SpawnTile.Invoke();
+                tilesList[i].TileObj.transform.position = parentHex[i].Hex.transform.position;
+                tilesList[i].TileObj.transform.SetParent(parentHex[i].Hex.transform);
+                tilesList[i].TileObj.tag = "Untagged";
+                tilesList[i].TileObj.GetComponent<SpriteRenderer>().sortingOrder = 1;
+                TileParentObj.transform.position = initialPos;
+                tilesList[i].State = true;
+                parentHex[i].Occupied = true;
+                parentHex[i].HexTile = tilesList[i];
+                iGrid.searching(parentHex[i]);
             }
-            else if(dual==true)
-            {
-                GameObject NewParent2 = iGrid.FindTile((Vector3)newpos + deltaPos);
-                if (NewParent.transform.childCount == 0 && NewParent2.transform.childCount == 0)
-                {
-                    tileObj.transform.position = (Vector3)newpos;
-                    tileRef.State = true;
-                    tileObj2.transform.position = (Vector3)newpos + deltaPos;
-                    tileObj2.transform.SetParent(NewParent2.transform);
-                    tileObj2.tag = "Untagged";
-                    tileObj.transform.SetParent(NewParent.transform);
-                    tileObj.tag = "Untagged";
-                    tileParentObj.transform.position = initialPos;
-                    SpawnTile.Invoke();
-                }
-                else
-                {
-                    tileRef.State = false;
-                    ReturnToPosition(touch);
-                }
-            }
-            else
-            {
-                tileRef.State = false;
-                ReturnToPosition(touch);
-            }
+            SpawnTile.Invoke();
         }
         else
         {
-            tileRef.State = false;
             ReturnToPosition(touch);
         }
     }
-    }
+    public void skip()
+    {
+        TileParentObj.transform.DetachChildren();
+        for(int i=0;i<noOfTiles;i++)
+        {
+            Destroy(tilesList[i].TileObj.gameObject);
+        }
+        //tiles.Clear();
+        SpawnTile.Invoke(); 
+    }  
+}

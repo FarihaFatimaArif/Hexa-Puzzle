@@ -26,8 +26,6 @@ public class InputController : MonoBehaviour, IInputState
             if (touch.phase == TouchPhase.Began)
             {
                 touchStartPos = touch.position;
-                Debug.Log(touch);
-                Debug.Log(state);
                 state.Begin(touch);
             }
             else if (touch.phase == TouchPhase.Moved)

@@ -16,6 +16,7 @@ public class MovingInputState : InputState
         //DragMove.Invoke(touch);
         // Debug.LogError($"");
         InputSystem.MovingTile(touch);
+       // InputSystem.Highlighttiles(touch);
     }
     public override void End(Touch touch)
     {

@@ -9,25 +9,33 @@ public class HexaGrid : MonoBehaviour, IGrid
     [SerializeField] GameObject Tile;
     [SerializeField] int Width = 5;
     [SerializeField] int Height = 5;
+    int maxHexes = 25;
     float xOffset = 1f;
     float yOffset = 0.86f;
     float xPos;
     float yPos;
+    int index=0;
     bool once = false;
     GameObject tileGenerated;
+    List<HexData> HexesList = new List<HexData>();
 
-    public Dictionary<Vector3, GameObject> tiles = new Dictionary<Vector3, GameObject>();
+    List<HexData> checkedHexes = new List<HexData>();
+    Queue<HexData> InqueueHexes = new Queue<HexData>();
+    List<HexData> neighbours = new List<HexData>();
+
+    public Dictionary<string, HexData> Hexes = new Dictionary<string, HexData>();
 
     // Start is called before the first frame update
     void Start()
     {
         Vector3 tilePosition;
-
-        tiles.Clear();
+        Hexes.Clear();
+        HexesList.Clear();
         for (int x = 0; x < Width; x++)
         {
             for (int y = 0; y < Height; y++)
             {
+                HexData temp = new HexData();
                 if (y % 2 == 0)
                 {
                     xPos = x * xOffset;
@@ -45,7 +53,13 @@ public class HexaGrid : MonoBehaviour, IGrid
                     }
                     tileGenerated.name = "Hex_" + x + "_" + y;
                     tileGenerated.transform.SetParent(this.transform);
-                    tiles.Add(tilePosition, tileGenerated);
+                    temp.Hex = tileGenerated;
+                    temp.Index = index;
+                    Debug.Log("index" + index);
+                    Debug.Log("id" + tileGenerated.name);
+                    temp.Id = tileGenerated.name;
+                    Hexes.Add(tileGenerated.name, temp);
+                    HexesList.Add(temp);
                 }
                 else if (x<Width-1)
                 {
@@ -58,40 +72,132 @@ public class HexaGrid : MonoBehaviour, IGrid
                     tileGenerated = (GameObject)Instantiate(Tile, tilePosition, Quaternion.identity);
                     tileGenerated.name = "Hex_" + x + "_" + y;
                     tileGenerated.transform.SetParent(this.transform);
-                    tiles.Add(tilePosition, tileGenerated);
+                    temp.Hex = tileGenerated;
+                    temp.Index = index;
+                    temp.Id = tileGenerated.name;
+                    Hexes.Add(tileGenerated.name, temp);
+                    HexesList.Add(temp);
+                    Debug.Log("index" + index);
+                    Debug.Log("id" + tileGenerated.name);
                 }
+                else if(x==Width-1)
+                {
+                    HexesList.Add(temp);
+                }
+                index++;
 
             }
         }
     }
 
-    public Vector3? GetNearestPositionFromPoint(Vector3 position, Vector3 delta)
+    public HexData GetNearestPositionFromPoint(Vector3 position)
     {
         float distance;
-        foreach (var pair in tiles)
+        foreach (var pair in Hexes)
         {
-             distance = Vector3.Distance(pair.Key, position);
-            if (distance < 0.5f)
+             distance = Vector3.Distance(pair.Value.Hex.transform.position, position);
+            if (distance <= 0.5f && pair.Value.Hex.transform.childCount==0)
             {
-                foreach (var pair2 in tiles)
-                {
-                    distance = Vector3.Distance(pair2.Key, position+delta);
-                    if (distance < 0.5f)
-                    {
-                        return pair.Key;
-                    }
-                }
+                return pair.Value;
             }
         }
 
         return null;
     }
-
-    public GameObject FindTile(Vector3 pos)
+    public void ResetColor(List<GameObject> temp)
     {
-        Debug.Log("in findtile");
-        Debug.Log(pos);
-        GameObject tile = tiles[pos];
-        return tile;
+       /* int i = 0;
+        foreach (var pair in tiles)
+        {
+            if (temp[i]!==pair.)
+            {
+                pair.Value.GetComponent<SpriteRenderer>().color = Color.white;
+                Debug.Log("Yrrr");
+            }
+            i++;
+        } */
+    }
+    public void searching(HexData hex)
+    {
+        InqueueHexes.Clear();
+        neighbours.Clear();
+        checkedHexes.Clear();
+        InqueueHexes.Enqueue(hex);
+        SearchNeighbours(hex);
+        Debug.Log("matched neighbours are");
+
+       foreach(var pair in neighbours)
+        {
+            Debug.Log(pair.Id);
+        }
+       if(neighbours.Distinct().Count()>=3)
+        {
+            Debug.Log("finish");
+            Merge();
+        }
+        Debug.Log("finish");
+    }
+    public void SearchNeighbours(HexData hex)
+    {
+        GridDirections directions=new GridDirections();
+        HexData temp;
+        if (!checkedHexes.Contains(hex))
+        {
+            if (directions.BottomLeft(hex.Index) < maxHexes && directions.BottomLeft(hex.Index) >= 0 && HexesList[directions.BottomLeft(hex.Index)].Occupied && hex.HexTile.Tier == HexesList[directions.BottomLeft(hex.Index)].HexTile.Tier)
+            {
+                InqueueHexes.Enqueue(HexesList[directions.BottomLeft(hex.Index)]);
+                neighbours.Add(hex);
+            }
+            if (directions.BottomRight(hex.Index) < maxHexes && directions.BottomRight(hex.Index) >= 0 && HexesList[directions.BottomRight(hex.Index)].Occupied && hex.HexTile.Tier == HexesList[directions.BottomRight(hex.Index)].HexTile.Tier)
+            {
+                InqueueHexes.Enqueue(HexesList[directions.BottomRight(hex.Index)]);
+                neighbours.Add(hex);
+            }
+            if (directions.TopLeft(hex.Index) < maxHexes && directions.TopLeft(hex.Index) >= 0 && HexesList[directions.TopLeft(hex.Index)].Occupied && hex.HexTile.Tier == HexesList[directions.TopLeft(hex.Index)].HexTile.Tier)
+            {
+                InqueueHexes.Enqueue(HexesList[directions.TopLeft(hex.Index)]);
+                neighbours.Add(hex);
+            }
+            if (directions.TopRight(hex.Index) < maxHexes && directions.TopRight(hex.Index) >= 0 && HexesList[directions.TopRight(hex.Index)].Occupied && hex.HexTile.Tier == HexesList[directions.TopRight(hex.Index)].HexTile.Tier)
+            {
+                InqueueHexes.Enqueue(HexesList[directions.TopRight(hex.Index)]);
+                neighbours.Add(hex);
+            }
+            if (directions.Left(hex.Index) < maxHexes && directions.Left(hex.Index) >= 0 && HexesList[directions.Left(hex.Index)].Occupied && hex.HexTile.Tier == HexesList[directions.Left(hex.Index)].HexTile.Tier)
+            {
+                InqueueHexes.Enqueue(HexesList[directions.Left(hex.Index)]);
+                neighbours.Add(hex);
+            }
+            if (directions.Right(hex.Index) < maxHexes && directions.Right(hex.Index) >= 0 && HexesList[directions.Right(hex.Index)].Occupied && hex.HexTile.Tier == HexesList[directions.Right(hex.Index)].HexTile.Tier)  //check tier here instead of below
+            { 
+                    InqueueHexes.Enqueue(HexesList[directions.Right(hex.Index)]);
+                    neighbours.Add(hex);
+            }
+            checkedHexes.Add(hex);
+        }
+        while(InqueueHexes.Count>0)
+        {
+            temp = InqueueHexes.Dequeue();
+             SearchNeighbours(temp);
+        }
+        return;
+    }
+    public void Merge()
+    {
+        bool merge = false;
+        foreach (var pair in neighbours.Distinct())
+        {
+            if (!merge)
+            { 
+                merge = true;
+            }
+            else
+            {
+            
+                pair.Hex.transform.DetachChildren();
+                pair.HexTile.TileObj.SetActive(false);
+                pair.HexTile.Tier = -1;
+           }
+        }
     }
 }

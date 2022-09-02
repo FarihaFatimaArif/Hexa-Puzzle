@@ -2,32 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile : MonoBehaviour
+public class Tile
 {
     //GameObject hex;
+    GameObject tile;
     [SerializeField] int tier;
     bool state;
-    Vector3 position;
-    //snapped or not
-    // Start is called before the first frame update
-    void Start()
+    public GameObject TileObj
     {
-       // position=
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        get { return this.tile; }
+        set { this.tile = value; }
+    } 
     public bool State
     {
         get { return state; }
         set { state = value; }
     }
-     public Vector3 Position
+    public int Tier
     {
-        get { return this.position; }
-        set { this.position = value; }
-    } 
+        get { return this.tier; }
+        set { tier = value; }
+    }
 }
