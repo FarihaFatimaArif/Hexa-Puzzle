@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class GridDirections
 {
-   // bool even;
     int maxNoHexes=22;
     bool checkrow(int i)
     {

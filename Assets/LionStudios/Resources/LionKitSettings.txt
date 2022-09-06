@@ -1,0 +1,61 @@
+{
+	"LionStudios.Suite.GDPR.LionGDPR": {
+		"appName": "",
+		"showFixItBannerOnDecline": true,
+		"fixItBannerHeight": 0.85000002384185791,
+		"fontScale": 1,
+		"titleFontColor": {
+			"r": 1,
+			"g": 1,
+			"b": 1,
+			"a": 1
+		},
+		"baseFontColor": {
+			"r": 0,
+			"g": 0,
+			"b": 0,
+			"a": 1
+		},
+		"secondaryColor": {
+			"r": 1,
+			"g": 0,
+			"b": 0,
+			"a": 1
+		},
+		"showBorders": true,
+		"backgroundColor": {
+			"r": 1,
+			"g": 1,
+			"b": 1,
+			"a": 1
+		},
+		"_privacyLinks": [
+			{
+				"privacyLink": ""
+			},
+			{
+				"privacyLink": ""
+			},
+			{
+				"privacyLink": ""
+			},
+			{
+				"privacyLink": ""
+			},
+			{
+				"privacyLink": ""
+			}
+		]
+	},
+	"LionStudios.Suite.Core.LionCore": {
+		"_UseMultiDexSupport": true,
+		"_UseProGuard": true,
+		"_OverrideGradlePluginVersion": false,
+		"_GradlePluginOverride": ""
+	},
+	"LionStudios.Suite.Debugging.LionDebug": {
+		"debuggerEnabled": true,
+		"showDebuggerAtStartup": true,
+		"debugLogLevel": 4
+	}
+}

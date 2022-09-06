@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "com.lionstudios.release.lionads": "1.0.2",
+    "com.lionstudios.release.liongdpr": "1.0.2",
+    "com.lionstudios.release.lionkitcore": "1.0.7",
     "com.unity.collab-proxy": "1.17.1",
     "com.unity.feature.2d": "1.0.0",
     "com.unity.ide.rider": "3.0.15",
@@ -41,5 +44,15 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "scopedRegistries": [
+    {
+      "name": "Lion Studios",
+      "url": "http://packages.lionstudios.cc:4873",
+      "scopes": [
+        "com.lionstudios.release",
+        "com.lionstudios.templates"
+      ]
+    }
+  ]
 }
