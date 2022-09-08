@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     TileController TileControllerRef;
+    [SerializeField] AdSystem AdSystem;
     InputController InputControllerRef;
     public HexaGrid HexaGrifRef;
     TileSpawner tileSpawner;
@@ -20,6 +21,10 @@ public class GameManager : MonoBehaviour
         InputControllerRef.InitializeInputController(TileControllerRef);
         TileControllerRef.InitializatingGrid(HexaGrifRef);
         TileControllerRef.InitializingTiles();
+    }
+    void SkipTile()
+    {
+       // AdSystem.O
     }
     public void Reset()
     {

@@ -6,19 +6,27 @@ using UnityEngine.UI;
 
 public class AsyncLoading : MonoBehaviour
 {
+    //[SerializeField] AdSystem AdsSystem;
     [SerializeField] Slider LoadingBar;
+    [SerializeField] AdSystem AdSystem;
+    //int maxScenes = 2;
+   // int sceneNo;
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(LoadScene());
+        AdSystem.InitializingAdSystem();
+            StartCoroutine(LoadScene(1));
     }
-
-    IEnumerator LoadScene()
+    public void LoadNextScene(int scene)
+    {
+       StartCoroutine(LoadScene(scene));
+    }
+    IEnumerator LoadScene(int index)
     {
         yield return null;
 
         //Begin to load the Scene you specify
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("MainMenu");
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(index);
         //Don't let the Scene activate until you allow it to
        // asyncOperation.allowSceneActivation = false;
         Debug.Log("Pro :" + asyncOperation.progress);

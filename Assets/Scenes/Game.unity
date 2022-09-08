@@ -399,8 +399,12 @@ MonoBehaviour:
   SpawnTile:
     m_PersistentCalls:
       m_Calls: []
+  SkippedTile:
+    m_PersistentCalls:
+      m_Calls: []
   initialPos: {x: 0, y: 0, z: 0}
   TileParentObj: {fileID: 0}
+  RewardGrantedSO: {fileID: 0}
 --- !u!61 &480037234
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1149,9 +1153,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 11400000, guid: 0c4a41ff2dcca4780b6385b218938f42, type: 2}
+        m_TargetAssemblyTypeName: AdSystem, Assembly-CSharp
+        m_MethodName: OnRewardAd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1840656268}
         m_TargetAssemblyTypeName: TileController, Assembly-CSharp
-        m_MethodName: skip
+        m_MethodName: SkipTile
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1379,6 +1395,18 @@ MonoBehaviour:
           m_StringArgument: Splash
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 11400000, guid: 0c4a41ff2dcca4780b6385b218938f42, type: 2}
+        m_TargetAssemblyTypeName: AdSystem, Assembly-CSharp
+        m_MethodName: OnQuitAd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1781231446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1512,7 +1540,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1840656260}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1532,6 +1560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2cf2ae4125734dbea1d122cb3834f34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AdSystem: {fileID: 0}
   HexaGrifRef: {fileID: 1193076017}
 --- !u!114 &1840656266
 MonoBehaviour:
@@ -1604,8 +1633,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  SkippedTile:
+    m_PersistentCalls:
+      m_Calls: []
   initialPos: {x: 0, y: 0, z: 0}
   TileParentObj: {fileID: 2078988329}
+  RewardGrantedSO: {fileID: 11400000, guid: 75ceda2a72c774362ab2df124da9b515, type: 2}
 --- !u!1 &1962837037
 GameObject:
   m_ObjectHideFlags: 0

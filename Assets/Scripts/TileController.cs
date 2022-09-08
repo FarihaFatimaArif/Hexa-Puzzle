@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -5,6 +6,7 @@ using UnityEngine.Events;
 public class TileController : MonoBehaviour, IInputSystem
 {
     public UnityEvent SpawnTile;
+    public UnityEvent SkippedTile;
     IGrid iGrid;
     float startTime;
     float distance;
@@ -12,8 +14,10 @@ public class TileController : MonoBehaviour, IInputSystem
     [SerializeField] Vector3 initialPos;
     int noOfTiles;
     List<Tile> tilesList = new List<Tile>();
-    List<HexData> tempHex2 = new List<HexData>();
+    Stack<HexData> highlightedTemplates = new Stack<HexData>();
     [SerializeField] GameObject TileParentObj;
+    [SerializeField] RewardGranted RewardGrantedSO;
+    //[SerializeField] AdSystem AdSystem;
     public void Start()
     {
         initialPos = new Vector3(2, -4, 0);
@@ -26,7 +30,7 @@ public class TileController : MonoBehaviour, IInputSystem
     public void InitializingTiles()
     {
         string tempstr;
-        tempHex2.Clear();
+        //tempHex2.Clear();
         tilesList.Clear();
         noOfTiles = TileParentObj.transform.childCount;
         for (int i = 0; i < noOfTiles; i++)
@@ -97,12 +101,15 @@ public class TileController : MonoBehaviour, IInputSystem
     {
         //bool highlighted = false;
        List<HexData> tempHex = new List<HexData>();
+        HexData temp;
     //   List<HexData> tempHex2 = new List<HexData>();
         bool highlight = true;
         Vector3 deltaPos = Vector3.zero;
         for (int i = 0; i < noOfTiles; i++)
         {
-            tempHex.Add(iGrid.GetNearestPositionFromPoint(tilesList[i].TileObj.transform.position + deltaPos));
+            temp=iGrid.GetNearestPositionFromPoint(tilesList[i].TileObj.transform.position + deltaPos);
+            tempHex.Add(temp);
+           // highlightedTemplates.Push(temp);
             if (tempHex[i] == null)
             {
                 highlight = false;
@@ -113,27 +120,36 @@ public class TileController : MonoBehaviour, IInputSystem
                 deltaPos = tempHex[i].Hex.transform.position - tempHex[i - 1].Hex.transform.position;
             }
         }
+        int h = 0;
+            while (highlightedTemplates.Count != 0 && h<tempHex.Count)
+            {
+                if (!highlightedTemplates.Contains(tempHex[h]))
+                {
+                    tempHex[h].Hex.GetComponent<SpriteRenderer>().color = Color.white;
+                }
+            }
+        highlightedTemplates.Clear();
         if (highlight)
         {
-            tempHex2.Clear();
+            //tempHex2.Clear();
             for (int i = 0; i < noOfTiles; i++)
             {
                 tempHex[i].Hex.GetComponent<SpriteRenderer>().color = Color.gray;
-                tempHex2.Add(tempHex[i]);
+                highlightedTemplates.Push(tempHex[i]);
             }
        
         }
-        if (tempHex2.Count != 0 && tempHex.Count != 0)
-            {
-                if(tempHex2[0].Id!=tempHex[0].Id)
-                {
-                    for (int i = 0; i < tempHex2.Count; i++)
-                    {
-                        tempHex2[i].Hex.GetComponent<SpriteRenderer>().color = Color.white;
-                    }
-                tempHex2.Clear();
-                }
-            }
+        //if (tempHex2.Count != 0 && tempHex.Count != 0)
+        //    {
+        //        if(tempHex2[0].Id!=tempHex[0].Id)
+        //        {
+        //            for (int i = 0; i < tempHex2.Count; i++)
+        //            {
+        //                tempHex2[i].Hex.GetComponent<SpriteRenderer>().color = Color.white;
+        //            }
+        //        tempHex2.Clear();
+        //        }
+        //    }
         //iGrid.ResetColor(tempTiles);
     }
     public void ReturnToPosition(Touch touch)
@@ -195,14 +211,29 @@ public class TileController : MonoBehaviour, IInputSystem
             ReturnToPosition(touch);
         }
     }
-    public void skip()
+
+    public void SkipTile()
     {
+        if (RewardGrantedSO.RewardAdStarted)
+            StartCoroutine(nameof(skip));
+    }
+    private IEnumerator skip()
+    {
+        Debug.Log(RewardGrantedSO.RewardGrantedCheck);
+        while (!RewardGrantedSO.RewardGrantedCheck)
+        {
+            yield return null;
+        }
         TileParentObj.transform.DetachChildren();
-        for(int i=0;i<noOfTiles;i++)
+        for (int i = 0; i < noOfTiles; i++)
         {
             Destroy(tilesList[i].TileObj.gameObject);
         }
         //tiles.Clear();
-        SpawnTile.Invoke(); 
-    }  
+        SpawnTile.Invoke();
+        SkippedTile.Invoke();
+        RewardGrantedSO.RewardGrantedCheck = false;
+        RewardGrantedSO.RewardAdStarted = false;
+    }
+        
 }
