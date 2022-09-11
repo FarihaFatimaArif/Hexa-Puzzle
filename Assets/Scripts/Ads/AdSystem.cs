@@ -5,8 +5,6 @@ using UnityEngine.Events;
 [CreateAssetMenu(menuName = "ScriptableObject/AdSystemSO", order = 1, fileName = "AdSystem")]
 public class AdSystem : ScriptableObject
 {
-    //InterstitialAds interstitialAds;
-    [SerializeField] RewardGranted RewardGrantedSO;
     private const string MaxKey = "hlKffQFn1sKXRefAUUKG4o-i-OOURETonfImCKvE29oyDwftIiyhVZMlNNxwUFl8NgUmynX33XOEq5m09yb34Z";
     private const string RewardedAdUnit = "585f249ad115c420";
     private const string InterstitialAdUnit = "7d62e5180461f57a";
@@ -15,13 +13,11 @@ public class AdSystem : ScriptableObject
     float startTime;
     float endTime;
     float difference;
+    public UnityAction RewardAction;
     public UnityEvent RewardedAdDone;
     //public UnityEvent ExitedAdDone;
     public void InitializingAdSystem()
     {
-        RewardGrantedSO.RewardGrantedCheck = false;
-        //DontDestroyOnLoad(this);
-        // timerInSeconds = 30;
         startTime = Time.time;
         //difference = 30;
         Debug.Log("here");
@@ -43,16 +39,16 @@ public class AdSystem : ScriptableObject
     }
     private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdkBase.AdInfo adInfo)
     {
-        // print("Rewarded user: " + reward.Amount + " " + reward.Label);
-        RewardGrantedSO.RewardGrantedCheck = true;
+        startTime = Time.time;
+        if (RewardAction != null)
+        {
+            RewardAction();
+        }
     }
 
     void OnRewardedAdClosed(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        //counter = false;
-        //StartCoroutine(Counter());
         startTime = Time.time;
-       // Counter();
         MaxSdk.LoadRewardedAd(RewardedAdUnit);
     }
         public void IntializingSdk()
@@ -105,7 +101,6 @@ public class AdSystem : ScriptableObject
         {
             if (MaxSdk.IsRewardedAdReady(RewardedAdUnit))
             {
-                RewardGrantedSO.RewardAdStarted = true;
                 MaxSdk.ShowRewardedAd(RewardedAdUnit);
             }
         }

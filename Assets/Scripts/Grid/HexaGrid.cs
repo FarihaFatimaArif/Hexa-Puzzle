@@ -9,6 +9,7 @@ public class HexaGrid : MonoBehaviour, IGrid
     [SerializeField] GameObject Tile;
     [SerializeField] int Width = 5;
     [SerializeField] int Height = 5;
+    [SerializeField] List<Sprite> TilesSprites;
     int maxHexes = 25;
     float xOffset = 1f;
     float yOffset = 0.86f;
@@ -190,6 +191,10 @@ public class HexaGrid : MonoBehaviour, IGrid
             if (!merge)
             { 
                 merge = true;
+                Debug.Log("b" + pair.HexTile.Tier);
+                pair.HexTile.TileObj.GetComponent<SpriteRenderer>().sprite = TilesSprites[pair.HexTile.Tier];
+                pair.HexTile.Tier = pair.HexTile.Tier + 1;
+                Debug.Log("a" + pair.HexTile.Tier);
             }
             else
             {
@@ -197,7 +202,12 @@ public class HexaGrid : MonoBehaviour, IGrid
                 pair.Hex.transform.DetachChildren();
                 pair.HexTile.TileObj.SetActive(false);
                 pair.HexTile.Tier = -1;
-           }
+                //Debug.Log("b"+pair.HexTile.Tier);
+                // pair.HexTile.Tier = pair.HexTile.Tier+1;
+                //pair.HexTile.TileObj.GetComponent<SpriteRenderer>().sprite = TilesSprites[pair.HexTile.Tier];
+                // Debug.Log("a"+pair.HexTile.Tier);
+
+            }
         }
     }
 }

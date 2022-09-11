@@ -9,18 +9,20 @@ public class AsyncLoading : MonoBehaviour
     //[SerializeField] AdSystem AdsSystem;
     [SerializeField] Slider LoadingBar;
     [SerializeField] AdSystem AdSystem;
+
     //int maxScenes = 2;
    // int sceneNo;
     // Start is called before the first frame update
     void Start()
     {
         AdSystem.InitializingAdSystem();
-            StartCoroutine(LoadScene(1));
+        StartCoroutine(LoadScene(1));
     }
     public void LoadNextScene(int scene)
     {
        StartCoroutine(LoadScene(scene));
     }
+
     IEnumerator LoadScene(int index)
     {
         yield return null;
@@ -28,7 +30,7 @@ public class AsyncLoading : MonoBehaviour
         //Begin to load the Scene you specify
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(index);
         //Don't let the Scene activate until you allow it to
-       // asyncOperation.allowSceneActivation = false;
+        //asyncOperation.allowSceneActivation = true;
         Debug.Log("Pro :" + asyncOperation.progress);
         //When the load is still in progress, output the Text and progress bar
         while (!asyncOperation.isDone)

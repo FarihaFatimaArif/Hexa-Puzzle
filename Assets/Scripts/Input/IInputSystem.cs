@@ -10,4 +10,5 @@ public interface IInputSystem
     public bool DetectRay(Touch touch);
     public void MovingTile(Touch touch);
     void Highlighttiles(Touch touch);
+    public void UnhighlightPreviousTiles();
 }

@@ -402,9 +402,11 @@ MonoBehaviour:
   SkippedTile:
     m_PersistentCalls:
       m_Calls: []
+  TileGlow: {fileID: 0}
+  TileBg: {fileID: 0}
+  AdSystem: {fileID: 0}
   initialPos: {x: 0, y: 0, z: 0}
   TileParentObj: {fileID: 0}
-  RewardGrantedSO: {fileID: 0}
 --- !u!61 &480037234
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -827,6 +829,12 @@ MonoBehaviour:
   Tile: {fileID: 3968421827092781827, guid: 223b488cff7a148bfa0d4ba8b87b64f2, type: 3}
   Width: 5
   Height: 5
+  TilesSprites:
+  - {fileID: 21300000, guid: 91a033728c43b4173919dd824662b648, type: 3}
+  - {fileID: 21300000, guid: b0e786d50de9e4a70abfd896bd1c9e1f, type: 3}
+  - {fileID: 21300000, guid: 7824322938db14d97a7ecf7812f84fad, type: 3}
+  - {fileID: 21300000, guid: a8d16bec865f44d78939b9fd35c90e6c, type: 3}
+  - {fileID: 21300000, guid: f92b58262b7d14da481cd9400861ca04, type: 3}
 --- !u!4 &1193076018
 Transform:
   m_ObjectHideFlags: 0
@@ -1153,21 +1161,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: 0c4a41ff2dcca4780b6385b218938f42, type: 2}
-        m_TargetAssemblyTypeName: AdSystem, Assembly-CSharp
-        m_MethodName: OnRewardAd
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1840656268}
         m_TargetAssemblyTypeName: TileController, Assembly-CSharp
-        m_MethodName: SkipTile
+        m_MethodName: SkipButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1636,9 +1632,11 @@ MonoBehaviour:
   SkippedTile:
     m_PersistentCalls:
       m_Calls: []
+  TileGlow: {fileID: 21300000, guid: 1a346f34df7014833a98bd30d5da0844, type: 3}
+  TileBg: {fileID: 21300000, guid: 53032311e98fb407faf092604756b79f, type: 3}
+  AdSystem: {fileID: 11400000, guid: 0c4a41ff2dcca4780b6385b218938f42, type: 2}
   initialPos: {x: 0, y: 0, z: 0}
   TileParentObj: {fileID: 2078988329}
-  RewardGrantedSO: {fileID: 11400000, guid: 75ceda2a72c774362ab2df124da9b515, type: 2}
 --- !u!1 &1962837037
 GameObject:
   m_ObjectHideFlags: 0

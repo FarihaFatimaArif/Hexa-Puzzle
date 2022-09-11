@@ -16,12 +16,14 @@ public class MovingInputState : InputState
         //DragMove.Invoke(touch);
         // Debug.LogError($"");
         InputSystem.MovingTile(touch);
-       // InputSystem.Highlighttiles(touch);
+        InputSystem.UnhighlightPreviousTiles();
+        InputSystem.Highlighttiles(touch);
     }
     public override void End(Touch touch)
     {
         //Drag End
         //DragMove.Invoke(touch);
+        InputSystem.UnhighlightPreviousTiles();
         InputSystem.SnapOnGrid(touch);
        // InputSystem.ReturnToPosition(touch);
         //InputSystem.SnapOnGrid(touch);

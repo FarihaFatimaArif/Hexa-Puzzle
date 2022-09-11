@@ -7,6 +7,9 @@ public class TileController : MonoBehaviour, IInputSystem
 {
     public UnityEvent SpawnTile;
     public UnityEvent SkippedTile;
+    [SerializeField] Sprite TileGlow;
+    [SerializeField] Sprite TileBg;
+    [SerializeField] AdSystem AdSystem;
     IGrid iGrid;
     float startTime;
     float distance;
@@ -16,7 +19,7 @@ public class TileController : MonoBehaviour, IInputSystem
     List<Tile> tilesList = new List<Tile>();
     Stack<HexData> highlightedTemplates = new Stack<HexData>();
     [SerializeField] GameObject TileParentObj;
-    [SerializeField] RewardGranted RewardGrantedSO;
+  //  [SerializeField] RewardGranted RewardGrantedSO;
     //[SerializeField] AdSystem AdSystem;
     public void Start()
     {
@@ -97,6 +100,13 @@ public class TileController : MonoBehaviour, IInputSystem
         distance = Vector3.Distance(startPos, pos);
         TileParentObj.transform.position = Vector3.Lerp(startPos, pos, Time.deltaTime * 2 + distance);
     }
+    public void UnhighlightPreviousTiles()
+    {
+        while (highlightedTemplates.Count > 0)
+        {
+            highlightedTemplates.Pop().Hex.GetComponent<SpriteRenderer>().sprite = TileBg;
+        }
+    }
     public void Highlighttiles(Touch touch)
     {
         //bool highlighted = false;
@@ -105,6 +115,11 @@ public class TileController : MonoBehaviour, IInputSystem
     //   List<HexData> tempHex2 = new List<HexData>();
         bool highlight = true;
         Vector3 deltaPos = Vector3.zero;
+        //while (highlightedTemplates.Count > 0)
+        //{
+        //    highlightedTemplates.Pop().Hex.GetComponent<SpriteRenderer>().sprite = TileBg;
+        //}
+      //  UnhighlightPreviousTiles();
         for (int i = 0; i < noOfTiles; i++)
         {
             temp=iGrid.GetNearestPositionFromPoint(tilesList[i].TileObj.transform.position + deltaPos);
@@ -114,31 +129,48 @@ public class TileController : MonoBehaviour, IInputSystem
             {
                 highlight = false;
                 i = noOfTiles;
+                return;
             }
             else if (i >= 1)
             {
                 deltaPos = tempHex[i].Hex.transform.position - tempHex[i - 1].Hex.transform.position;
             }
+            //if(i==0 && tempHex[i]!=null && highlightedTemplates.Count>0)
+            //{
+            //    if(!highlightedTemplates.Contains(tempHex[i]))
+            //    {
+            //        while(highlightedTemplates.Count>0)
+            //        {
+            //            highlightedTemplates.Pop().Hex.GetComponent<SpriteRenderer>().color = Color.white;
+            //        }
+            //    }
+            //}
         }
-        int h = 0;
-            while (highlightedTemplates.Count != 0 && h<tempHex.Count)
-            {
-                if (!highlightedTemplates.Contains(tempHex[h]))
-                {
-                    tempHex[h].Hex.GetComponent<SpriteRenderer>().color = Color.white;
-                }
-            }
         highlightedTemplates.Clear();
+        //int h = 0;
+        //    while (highlightedTemplates.Count > 0 && h<tempHex.Count)
+        //    {
+        //        if (!highlightedTemplates.Contains(tempHex[h]))
+        //        {
+        //            tempHex[h].Hex.GetComponent<SpriteRenderer>().color = Color.white;
+        //        }
+        //    h++;
+        //    }
+        //highlightedTemplates.Clear();
         if (highlight)
         {
             //tempHex2.Clear();
             for (int i = 0; i < noOfTiles; i++)
             {
-                tempHex[i].Hex.GetComponent<SpriteRenderer>().color = Color.gray;
+                tempHex[i].Hex.GetComponent<SpriteRenderer>().sprite = TileGlow;
                 highlightedTemplates.Push(tempHex[i]);
             }
-       
+
         }
+
+
+
+
         //if (tempHex2.Count != 0 && tempHex.Count != 0)
         //    {
         //        if(tempHex2[0].Id!=tempHex[0].Id)
@@ -212,28 +244,22 @@ public class TileController : MonoBehaviour, IInputSystem
         }
     }
 
-    public void SkipTile()
+    public void SkipButton()
     {
-        if (RewardGrantedSO.RewardAdStarted)
-            StartCoroutine(nameof(skip));
+        AdSystem.RewardAction = skip;
+        AdSystem.OnRewardAd();
     }
-    private IEnumerator skip()
+    void skip()
     {
-        Debug.Log(RewardGrantedSO.RewardGrantedCheck);
-        while (!RewardGrantedSO.RewardGrantedCheck)
-        {
-            yield return null;
-        }
+        Debug.Log("on skip");
         TileParentObj.transform.DetachChildren();
+        //TileParentObj.transform.PA
         for (int i = 0; i < noOfTiles; i++)
         {
             Destroy(tilesList[i].TileObj.gameObject);
         }
-        //tiles.Clear();
         SpawnTile.Invoke();
         SkippedTile.Invoke();
-        RewardGrantedSO.RewardGrantedCheck = false;
-        RewardGrantedSO.RewardAdStarted = false;
     }
         
 }
