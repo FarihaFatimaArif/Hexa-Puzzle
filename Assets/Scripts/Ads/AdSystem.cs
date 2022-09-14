@@ -5,6 +5,7 @@ using UnityEngine.Events;
 [CreateAssetMenu(menuName = "ScriptableObject/AdSystemSO", order = 1, fileName = "AdSystem")]
 public class AdSystem : ScriptableObject
 {
+    [SerializeField] RewardGranted RewardGranted;
     private const string MaxKey = "hlKffQFn1sKXRefAUUKG4o-i-OOURETonfImCKvE29oyDwftIiyhVZMlNNxwUFl8NgUmynX33XOEq5m09yb34Z";
     private const string RewardedAdUnit = "585f249ad115c420";
     private const string InterstitialAdUnit = "7d62e5180461f57a";
@@ -85,7 +86,7 @@ public class AdSystem : ScriptableObject
 
     public void OnQuitAd()
     {
-        if(MaxSdk.IsInitialized() && Counter()==true)
+        if(MaxSdk.IsInitialized() && Counter()==true && RewardGranted.RemoveAds!=true)
         {
             if (MaxSdk.IsInterstitialReady(InterstitialAdUnit))
             {
@@ -99,9 +100,20 @@ public class AdSystem : ScriptableObject
     {
         if (MaxSdk.IsInitialized())
         {
-            if (MaxSdk.IsRewardedAdReady(RewardedAdUnit))
+            if (RewardGranted.NoOfSkips == 0)
             {
-                MaxSdk.ShowRewardedAd(RewardedAdUnit);
+                if (MaxSdk.IsRewardedAdReady(RewardedAdUnit))
+                {
+                    MaxSdk.ShowRewardedAd(RewardedAdUnit);
+                }
+            }
+            else
+            {
+                if (RewardAction != null)
+                {
+                    RewardAction();
+                }
+                RewardGranted.NoOfSkips--;
             }
         }
     }

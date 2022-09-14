@@ -109,22 +109,14 @@ public class TileController : MonoBehaviour, IInputSystem
     }
     public void Highlighttiles(Touch touch)
     {
-        //bool highlighted = false;
        List<HexData> tempHex = new List<HexData>();
         HexData temp;
-    //   List<HexData> tempHex2 = new List<HexData>();
         bool highlight = true;
         Vector3 deltaPos = Vector3.zero;
-        //while (highlightedTemplates.Count > 0)
-        //{
-        //    highlightedTemplates.Pop().Hex.GetComponent<SpriteRenderer>().sprite = TileBg;
-        //}
-      //  UnhighlightPreviousTiles();
         for (int i = 0; i < noOfTiles; i++)
         {
             temp=iGrid.GetNearestPositionFromPoint(tilesList[i].TileObj.transform.position + deltaPos);
             tempHex.Add(temp);
-           // highlightedTemplates.Push(temp);
             if (tempHex[i] == null)
             {
                 highlight = false;
@@ -135,31 +127,10 @@ public class TileController : MonoBehaviour, IInputSystem
             {
                 deltaPos = tempHex[i].Hex.transform.position - tempHex[i - 1].Hex.transform.position;
             }
-            //if(i==0 && tempHex[i]!=null && highlightedTemplates.Count>0)
-            //{
-            //    if(!highlightedTemplates.Contains(tempHex[i]))
-            //    {
-            //        while(highlightedTemplates.Count>0)
-            //        {
-            //            highlightedTemplates.Pop().Hex.GetComponent<SpriteRenderer>().color = Color.white;
-            //        }
-            //    }
-            //}
         }
         highlightedTemplates.Clear();
-        //int h = 0;
-        //    while (highlightedTemplates.Count > 0 && h<tempHex.Count)
-        //    {
-        //        if (!highlightedTemplates.Contains(tempHex[h]))
-        //        {
-        //            tempHex[h].Hex.GetComponent<SpriteRenderer>().color = Color.white;
-        //        }
-        //    h++;
-        //    }
-        //highlightedTemplates.Clear();
         if (highlight)
         {
-            //tempHex2.Clear();
             for (int i = 0; i < noOfTiles; i++)
             {
                 tempHex[i].Hex.GetComponent<SpriteRenderer>().sprite = TileGlow;
@@ -167,22 +138,6 @@ public class TileController : MonoBehaviour, IInputSystem
             }
 
         }
-
-
-
-
-        //if (tempHex2.Count != 0 && tempHex.Count != 0)
-        //    {
-        //        if(tempHex2[0].Id!=tempHex[0].Id)
-        //        {
-        //            for (int i = 0; i < tempHex2.Count; i++)
-        //            {
-        //                tempHex2[i].Hex.GetComponent<SpriteRenderer>().color = Color.white;
-        //            }
-        //        tempHex2.Clear();
-        //        }
-        //    }
-        //iGrid.ResetColor(tempTiles);
     }
     public void ReturnToPosition(Touch touch)
     {

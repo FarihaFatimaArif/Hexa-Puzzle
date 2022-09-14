@@ -5,6 +5,7 @@ using UnityEngine.Events;
 [CreateAssetMenu(menuName = "ScriptableObject/RewardGrantedSO", order = 1, fileName = "RewardGranted")]
 public class RewardGranted : ScriptableObject
 {
-    public bool RewardGrantedCheck;
-    public bool RewardAdStarted;
+    public bool RemoveAds=false;
+    public int NoOfCoins;
+    public int NoOfSkips;
 }

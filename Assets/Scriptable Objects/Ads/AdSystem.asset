@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2298b18581ef64266ae567ec11929950, type: 3}
   m_Name: AdSystem
   m_EditorClassIdentifier: 
-  RewardGrantedSO: {fileID: 11400000, guid: 75ceda2a72c774362ab2df124da9b515, type: 2}
+  RewardGranted: {fileID: 11400000, guid: 75ceda2a72c774362ab2df124da9b515, type: 2}
   RewardedAdDone:
     m_PersistentCalls:
       m_Calls:

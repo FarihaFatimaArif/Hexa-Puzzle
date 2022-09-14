@@ -9,13 +9,14 @@ public class AsyncLoading : MonoBehaviour
     //[SerializeField] AdSystem AdsSystem;
     [SerializeField] Slider LoadingBar;
     [SerializeField] AdSystem AdSystem;
-
-    //int maxScenes = 2;
+    [SerializeField] IAPShop IAPShop;
+    //int maxScenes = 2; 
    // int sceneNo;
     // Start is called before the first frame update
     void Start()
     {
         AdSystem.InitializingAdSystem();
+        IAPShop.Initialize();
         StartCoroutine(LoadScene(1));
     }
     public void LoadNextScene(int scene)

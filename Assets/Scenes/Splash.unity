@@ -390,6 +390,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadingBar: {fileID: 550030081}
   AdSystem: {fileID: 11400000, guid: 0c4a41ff2dcca4780b6385b218938f42, type: 2}
+  IAPShop: {fileID: 11400000, guid: f13f7af749cde44c5868c5fcc40cdb4a, type: 2}
 --- !u!1 &1342004763
 GameObject:
   m_ObjectHideFlags: 0

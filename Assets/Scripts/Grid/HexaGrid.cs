@@ -24,13 +24,16 @@ public class HexaGrid : MonoBehaviour, IGrid
     Queue<HexData> InqueueHexes = new Queue<HexData>();
     List<HexData> neighbours = new List<HexData>();
 
-    public Dictionary<string, HexData> Hexes = new Dictionary<string, HexData>();
+    public Dictionary<Vector2, HexData> Hexes = new Dictionary<Vector2, HexData>();
 
+
+   //[SerializeField] List<Vector2> hexGridPos = new List<Vector2>();
     // Start is called before the first frame update
     void Start()
     {
         Vector3 tilePosition;
         Hexes.Clear();
+        Vector2 tempvec = new Vector2();
         HexesList.Clear();
         for (int x = 0; x < Width; x++)
         {
@@ -59,7 +62,11 @@ public class HexaGrid : MonoBehaviour, IGrid
                     Debug.Log("index" + index);
                     Debug.Log("id" + tileGenerated.name);
                     temp.Id = tileGenerated.name;
-                    Hexes.Add(tileGenerated.name, temp);
+                    tempvec.x = x;
+                    tempvec.y = y;
+                    Hexes.Add(tempvec, temp);
+                    
+                    //hexGridPos.Add(tempvec);
                     HexesList.Add(temp);
                 }
                 else if (x<Width-1)
@@ -76,8 +83,13 @@ public class HexaGrid : MonoBehaviour, IGrid
                     temp.Hex = tileGenerated;
                     temp.Index = index;
                     temp.Id = tileGenerated.name;
-                    Hexes.Add(tileGenerated.name, temp);
+                    tempvec.x = x;
+                    tempvec.y = y;
+                    Hexes.Add(tempvec, temp);
                     HexesList.Add(temp);
+                    tempvec.x = x;
+                    tempvec.y = y;
+                    //hexGridPos.Add(tempvec);
                     Debug.Log("index" + index);
                     Debug.Log("id" + tileGenerated.name);
                 }
@@ -137,6 +149,20 @@ public class HexaGrid : MonoBehaviour, IGrid
             Merge();
         }
         Debug.Log("finish");
+    }
+    public void SearchingNeighbours(HexData hex)
+    {
+        GridDirections directions = new GridDirections();
+        HexData temp;
+        if (!checkedHexes.Contains(hex))
+        {
+            List<Vector2> neighbourPositions = new List<Vector2>();
+            //neighbourPositions=directions.NeighbourPositions()
+            for (int i=0; i<6;i++)
+            {
+
+            }
+        }
     }
     public void SearchNeighbours(HexData hex)
     {
